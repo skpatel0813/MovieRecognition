@@ -6,7 +6,7 @@ from torchvision.models import efficientnet_b2
 from torch.utils.data import Dataset, DataLoader
 from PIL import Image
 import json
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import pandas as pd
 
 #Setting the device to GPU if avaiable
@@ -120,9 +120,17 @@ for i, (images, labels, paths) in enumerate(test_loader):
 acc = accuracy_score(y_true, y_pred)
 top5_acc = sum(top5_matches) / len(top5_matches)
 
+#Calculating additional classification metrics
+precision = precision_score(y_true, y_pred, average='macro', zero_division=0)
+recall = recall_score(y_true, y_pred, average='macro', zero_division=0)
+f1 = f1_score(y_true, y_pred, average='macro', zero_division=0)
+
 #Printing results
 print(f"\nTop-1 Accuracy: {acc:.4f}")
 print(f"Top-5 Accuracy: {top5_acc:.4f}")
+print(f"Precision:      {precision:.4f}")
+print(f"Recall:         {recall:.4f}")
+print(f"F1 Score:       {f1:.4f}")
 
 #Saving predictions to CSV
 df = pd.DataFrame(csv_data)
